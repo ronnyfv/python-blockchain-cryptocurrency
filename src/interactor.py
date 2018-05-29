@@ -1,7 +1,7 @@
 import inquirer
 import pprint
 
-import src.blockchain
+from .blockchain import get_transaction_value, add_transaction, print_blockchain, owner, participants, manipulate, mine_block, get_balance, verify_chain, open_transactions
 
 pp = pprint.PrettyPrinter(indent=2)
 
@@ -26,37 +26,29 @@ def init():
         user_choice = action['action']
 
         if user_choice == 'Add new transaction value':
-            input_data = blockchain.get_transaction_value()
+            input_data = get_transaction_value()
             recipient, amount = input_data
-            if not blockchain.add_transaction(blockchain.owner, recipient, amount):
+            if not add_transaction(owner, recipient, amount):
                 print('Amount not available')
         elif user_choice == 'Output the blockchain blocks':
-            blockchain.print_blockchain()
+            print_blockchain()
         elif user_choice == 'Output participants':
-            pp.pprint(blockchain.participants)
+            pp.pprint(participants)
         elif user_choice == 'Mine block':
-            if blockchain.mine_block():
+            if mine_block():
                 open_transactions = []
         elif user_choice == 'Manipulate the chain':
-            blockchain.manipulate()
+            manipulate()
         elif user_choice == 'Quit':
             waiting_for_input = False
         else:
             print('Input was invalid, please pick a value from the options!')
             continue
 
-        pp.pprint(blockchain.get_balance('Ronny'))
+        pp.pprint(get_balance('Ronny'))
 
-        if not blockchain.verify_chain():
+        if not verify_chain():
             print('Blockchain not valid, exiting!')
             waiting_for_input = False
     else:
         print('Done!')
-
-
-# content of test_sample.py
-def adsadasdas(x):
-    return x + 1
-
-
-# init()

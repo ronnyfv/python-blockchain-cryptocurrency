@@ -152,3 +152,11 @@ def manipulate():
                 {'sender': 'Chris', 'recipient': 'Max', 'amount': 100.0}
             ]
         }
+
+
+# Test function for module  
+def _test():
+    pass
+
+if __name__ == '__main__':
+    _test()
