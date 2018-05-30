@@ -15,13 +15,14 @@ owner = 'Ronny'
 participants = set()
 
 
-def adsadasdas(x):
-    return x + 3
-
-
 def hash_block(block):
     temporary_hash = [block[key] for key in block]
     return hash(str(temporary_hash))
+
+
+def clear_transactions():
+    global open_transactions
+    open_transactions = []
 
 
 def get_balance(participant):
@@ -52,10 +53,6 @@ def get_last_blockchain_value():
     if len(blockchain) < 1:
         return None
     return blockchain[-1]
-
-
-def verify_transaction(transaction):
-    return get_balance(transaction['sender']) >= transaction['amount']
 
 
 def add_transaction(sender, recipient, amount=0.0):
@@ -143,6 +140,14 @@ def verify_chain():
     return True
 
 
+def verify_transaction(transaction):
+    return get_balance(transaction['sender']) >= transaction['amount']
+
+
+def verify_transactions():
+    return all([verify_transaction(tx) for tx in open_transactions])
+
+
 def manipulate():
     if len(blockchain) >= 1:
         blockchain[0] = {
@@ -154,9 +159,10 @@ def manipulate():
         }
 
 
-# Test function for module  
+# Test function for module
 def _test():
     pass
+
 
 if __name__ == '__main__':
     _test()

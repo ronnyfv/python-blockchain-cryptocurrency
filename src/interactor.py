@@ -1,17 +1,37 @@
 import inquirer
 import pprint
 
-from .blockchain import get_transaction_value, add_transaction, print_blockchain, owner, participants, manipulate, mine_block, get_balance, verify_chain, open_transactions
+from .blockchain import (get_transaction_value,
+                         add_transaction,
+                         print_blockchain,
+                         owner,
+                         participants,
+                         manipulate,
+                         mine_block,
+                         get_balance,
+                         verify_chain,
+                         open_transactions,
+                         verify_transactions,
+                         clear_transactions)
 
 pp = pprint.PrettyPrinter(indent=2)
 
+NEW_TRANSACTION = 'Add new transaction value'
+MINE_BLOCK = 'Mine a new block'
+OUTPUT_BLOCKCHAIN = 'Output the blockchain blocks'
+OUTPUT_PARTICIPANTS = 'Output participants'
+VALIDATE_TRANSACTIONS = 'Check transaction validity'
+CHANGE_CHAIN = 'Manipulate the chain'
+QUIT = 'Quit'
+
 choices = [
-    'Add new transaction value',
-    'Output the blockchain blocks',
-    'Output participants',
-    'Mine block',
-    'Manipulate the chain',
-    'Quit'
+    NEW_TRANSACTION,
+    MINE_BLOCK,
+    OUTPUT_BLOCKCHAIN,
+    OUTPUT_PARTICIPANTS,
+    VALIDATE_TRANSACTIONS,
+    CHANGE_CHAIN,
+    QUIT
 ]
 questions = [
     inquirer.List('action', message='Please choose: ', choices=choices)
@@ -25,30 +45,32 @@ def init():
         action = inquirer.prompt(questions)
         user_choice = action['action']
 
-        if user_choice == 'Add new transaction value':
+        if user_choice == NEW_TRANSACTION:
             input_data = get_transaction_value()
             recipient, amount = input_data
             if not add_transaction(owner, recipient, amount):
-                print('Amount not available')
-        elif user_choice == 'Output the blockchain blocks':
-            print_blockchain()
-        elif user_choice == 'Output participants':
-            pp.pprint(participants)
-        elif user_choice == 'Mine block':
+                pp.pprint('Amount not available')
+        elif user_choice == MINE_BLOCK:
             if mine_block():
-                open_transactions = []
-        elif user_choice == 'Manipulate the chain':
+                clear_transactions()
+        elif user_choice == OUTPUT_BLOCKCHAIN:
+            print_blockchain()
+        elif user_choice == OUTPUT_PARTICIPANTS:
+            pp.pprint(participants)
+        elif user_choice == VALIDATE_TRANSACTIONS:
+            if verify_transactions():
+                pp.pprint('All transactions are valid')
+            else:
+                pp.pprint('There are invalid transactions')
+        elif user_choice == CHANGE_CHAIN:
             manipulate()
-        elif user_choice == 'Quit':
+        elif user_choice == QUIT:
             waiting_for_input = False
-        else:
-            print('Input was invalid, please pick a value from the options!')
-            continue
 
         pp.pprint(get_balance('Ronny'))
 
         if not verify_chain():
-            print('Blockchain not valid, exiting!')
+            pp.pprint('Blockchain not valid, exiting!')
             waiting_for_input = False
     else:
-        print('Done!')
+        pp.pprint('Done!')
